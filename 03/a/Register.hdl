@@ -14,5 +14,37 @@ CHIP Register {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
-}
+    Mux(a=oldin0, b=in[0], sel=load, out=o0);	// This whole thing could have been 
+    Mux(a=oldin1, b=in[1], sel=load, out=o1);	// implemented with 16 of the pre-
+    Mux(a=oldin2, b=in[2], sel=load, out=o2);	// viously built bits... stupid! 
+    Mux(a=oldin3, b=in[3], sel=load, out=o3);
+    Mux(a=oldin4, b=in[4], sel=load, out=o4);
+    Mux(a=oldin5, b=in[5], sel=load, out=o5);
+    Mux(a=oldin6, b=in[6], sel=load, out=o6);
+    Mux(a=oldin7, b=in[7], sel=load, out=o7);
+    Mux(a=oldin8, b=in[8], sel=load, out=o8);
+    Mux(a=oldin9, b=in[9], sel=load, out=o9);
+    Mux(a=oldin10, b=in[10], sel=load, out=o10);
+    Mux(a=oldin11, b=in[11], sel=load, out=o11);
+    Mux(a=oldin12, b=in[12], sel=load, out=o12);
+    Mux(a=oldin13, b=in[13], sel=load, out=o13);
+    Mux(a=oldin14, b=in[14], sel=load, out=o14);
+    Mux(a=oldin15, b=in[15], sel=load, out=o15);
+
+    DFF(in=o0, out=out[0], out=oldin0);
+    DFF(in=o1, out=out[1], out=oldin1);
+    DFF(in=o2, out=out[2], out=oldin2);
+    DFF(in=o3, out=out[3], out=oldin3);
+    DFF(in=o4, out=out[4], out=oldin4);
+    DFF(in=o5, out=out[5], out=oldin5);
+    DFF(in=o6, out=out[6], out=oldin6);
+    DFF(in=o7, out=out[7], out=oldin7);
+    DFF(in=o8, out=out[8], out=oldin8);
+    DFF(in=o9, out=out[9], out=oldin9);
+    DFF(in=o10, out=out[10], out=oldin10);
+    DFF(in=o11, out=out[11], out=oldin11);
+    DFF(in=o12, out=out[12], out=oldin12);
+    DFF(in=o13, out=out[13], out=oldin13);
+    DFF(in=o14, out=out[14], out=oldin14);
+    DFF(in=o15, out=out[15], out=oldin15);
+}	
