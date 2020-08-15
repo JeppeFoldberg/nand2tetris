@@ -26,7 +26,6 @@
  */
 
 CHIP CPU {
-
     IN  inM[16],         // M value input  (M = contents of RAM[A])
         instruction[16], // Instruction for execution
         reset;           // Signals whether to re-start the current
@@ -39,5 +38,50 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    Mux16(a=aluout, b=instruction, sel=not15, out=firstmux);  // choses between instruction and former alu-output
+
+    Mux16(a=false, b=instruction, sel=instruction[15], out[3]=writeM);  // Makes sure that we do not write to m if a-instruction
+
+    Not(in=instruction[15], out=not15);
+    Or(a=not15, b=instruction[5], out=loada);
+    ARegister(in=firstmux, load=loada, out=areg, out[0..14]=addressM);  // A register. Det giver jo egentlig lidt sig selv nu
+    
+    And(a=instruction[15], b=instruction[4], out=loadd);
+    DRegister(in=aluout, load=loadd, out=dreg);  // D register
+
+    And(a=instruction[15], b=instruction[12], out=usea);
+    Mux16(a=areg, b=inM, sel=usea, out=secmux);  // Choses between A register or contents of M(ram[A])
+
+    ALU(x=dreg, y=secmux, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8],
+        f=instruction[7], no=instruction[6], out=aluout, out=outM, zr=zrc, ng=ngc);  // You know this!
+
+    Or(a=zrc, b=ngc, out=temp);  // Making bit that shows if alu-out is positive
+    Not(in=temp, out=pos);
+
+    And(a=instruction[0], b=pos, out=temp2);
+    And(a=instruction[1], b=zrc, out=temp3);
+    And(a=instruction[2], b=ngc, out=temp4);
+    Or(a=temp2, b=temp3, out=or1);
+    Or(a=or1, b=temp4, out=temp5);
+    And(a=instruction[15], b=temp5, out=jump);
+    Not(in=jump, out=notjump);
+
+    // And(a=ngc, b=j1, out=lessbit);
+    // And(a=zrc, b=j2, out=eqbit);
+    // And(a=pos, b=j3, out=posbit);
+    // Or(a=lessbit, b=eqbit, out=temp2);
+    // Or(a=temp2, b=posbit, out=jump);
+    // Not(in=jump, out=notjump);
+   
+    // Xor(a=ngc, b=j1, out=temp2);
+    // Xor(a=zrc, b=j2, out=temp3);
+    // Xor(a=pos, b=j3, out=temp4);
+    // Not(in=temp2, out=n2);
+    // Not(in=temp3, out=n3);
+    // Not(in=temp4, out=n4);
+    // And(a=n2, b=n3, out=temp5);
+    // And(a=temp5, b=n4, out=jump);
+    // Not(in=jump, out=notjump);
+
+    PC(in=areg, load=jump, inc=notjump, reset=reset, out[0..14]=pc);  // program counter
 }
