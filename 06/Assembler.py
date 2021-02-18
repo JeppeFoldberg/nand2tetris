@@ -1,6 +1,23 @@
 #!/usr/bin/python
 import sys
 
+"""
+Dette script er lavet til et af mine hobby-projekter; nand2tetris. Det er et kursus der er lavet for at give et simpelt overblik
+af hvordan en computer er bygget fra bunden og op. Her har jeg lavet en assembler der tager imod simpel assemblykode og omdanner det
+til binær maskinkode som den simple computer jeg har bygget (virtuelt) kan forstå. Når jeg nu skal vise dette script bliver jeg konfronteret
+med hvor dårlig jeg har været til at skrive kommentarer til den. Jeg er meget opmærksom på at ordentlige kommentarer er med til at gøre 
+ens kode forståeligt for andre men eftersom jeg kun har skrevet dette script for min egen skyld har jeg været lidt for afslappet omkring det.
+
+Helt grundlæggende tager den imod en tekstfil og outputter en .hack fil (filformatet til førnævnte computer!). Først gennemgår den tekstfilen 
+for symboler der endnu ikke er i symbol-ordbogen.Hvis de ikke er i symbol-ordbogen bliver de tilføjet og får en ubrugt adresse i hack-computerens
+hukommelse. Derefter gennemgår den scriptet og omdanner hver linje til en binær kode primært ved at matche linjens indhold med de forskellige ord-
+bøger der indeholder de rigtige binære koder! 
+
+I projektet nand2tetris foreskriver de egentlig en anden (mere kompliceret) måde at bygge assembleren på. Her har jeg taget en genvej ved at udnytte
+pythons måde at fungere på. Får jeg ekstra tid en dag kunne jeg godt tænke mig at bygge assembleren efter deres specifikationer, for at få et bredere
+perspektiv på forskellige programmerings-praksisser og -sprog.
+"""
+
 script, assemblycode = sys.argv
 filename = assemblycode.split(".")[0] + ".hack"
 
@@ -38,21 +55,7 @@ with open(assemblycode, "r") as f:
             romcounter += 1
         if line[0] == "(":
             symboldict[line.strip("()")] = "{:016b}".format(romcounter)
-        # if line[0] == "@":
-        #     try:
-        #         print(line.split("@")[1])
-        #         symboldict[line.split("@")[1]]
-        #     except KeyError:
-        #         symboldict[str(line.split("@")[1])] = "{:016b}".format(symbolcounter)
-        #         symbolcounter += 1
-        # elif line[0] == "(":
-        #     try:
-        #         symboldict[line.strip("()")]
-        #     except KeyError:
-        #         symboldict[line.strip("()")] = "{:016b}".format(symbolcounter)
-        #         symbolcounter += 1
 
-# print(symboldict.keys())
 
 with open(assemblycode, "r") as f, open(filename, "w") as f2:
     counter = 16
@@ -84,8 +87,6 @@ with open(assemblycode, "r") as f, open(filename, "w") as f2:
                     f2.write(symboldict[line] + "\r\n")
         elif "(" in line:
             continue
-            # line = line.strip("()")
-            # f2.write(symboldict[line] + "\r\n")
         else:
             line = str(line.split("//")[0].rstrip("\r\n"))
             line = line.strip()
